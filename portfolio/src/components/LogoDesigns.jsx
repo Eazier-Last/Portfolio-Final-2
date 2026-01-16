@@ -12,7 +12,7 @@ const LogoDesigns = () => {
       id: 1,
       title: "Paw Prints",
       category: "Printing Shop",
-      description: "Modern tech company logo combining geometric precision with organic curves. Represents innovation, stability, and forward-thinking approach in the tech industry.",
+      description: "Custom pet prints and general printing services. Turning photos and projects into beautiful, tangible keepsakes.",
       image: Pawprint2,
       thumbnail: Pawprint1,
       color: "#4361EE",
@@ -28,11 +28,11 @@ const LogoDesigns = () => {
         weights: ["Light", "Regular", "Medium", "SemiBold", "Bold"]
       },
       colorPalette: [
-        { value: "#ed97ab" },
-        { value: "#ffffff" },
-        { value: "#000000" },
-        
-      ]
+        { name: "Primary Pink", value: "#ed97ab" },
+        { name: "White", value: "#ffffff" },
+        { name: "Black", value: "#000000" },
+      ],
+      software: ["Illustrator", ]
     },
     {
       id: 2,
@@ -59,7 +59,8 @@ const LogoDesigns = () => {
         { name: "Earth Brown", value: "#7209B7" },
         { name: "Cream", value: "#F8F9FA" },
         { name: "Charcoal", value: "#212529" }
-      ]
+      ],
+      software: ["Illustrator", "Photoshop"]
     },
     {
       id: 3,
@@ -86,7 +87,8 @@ const LogoDesigns = () => {
         { name: "Cream", value: "#F5E6CA" },
         { name: "Dark Roast", value: "#2D1B00" },
         { name: "Accent Gold", value: "#FFD700" }
-      ]
+      ],
+      software: ["Illustrator", "Photoshop"]
     },
     {
       id: 4,
@@ -113,7 +115,8 @@ const LogoDesigns = () => {
         { name: "Cool Gray", value: "#4A5568" },
         { name: "White", value: "#FFFFFF" },
         { name: "Black", value: "#000000" }
-      ]
+      ],
+      software: ["Illustrator", "Photoshop"]
     }
   ]);
 
@@ -121,7 +124,7 @@ const LogoDesigns = () => {
   const [isLogoAnimating, setIsLogoAnimating] = useState(false);
   const [isLogoSticky, setIsLogoSticky] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [activeModal, setActiveModal] = useState(null); // null, 'logo', or 'mockup'
+  const [activeModal, setActiveModal] = useState(null);
   const [activeMockupIndex, setActiveMockupIndex] = useState(0);
   const logoDesignsRef = useRef(null);
   const logoThumbnailRef = useRef(null);
@@ -245,18 +248,7 @@ const LogoDesigns = () => {
     if (!logo.colorPalette || logo.colorPalette.length === 0) {
       return logo.color;
     }
-    // Use the specified palette index, or the first color if index doesn't exist
     return logo.colorPalette[paletteIndex]?.value || logo.colorPalette[0]?.value || logo.color;
-  };
-
-  const getColorFromPaletteByName = (index, name) => {
-    const logo = logos[index];
-    if (!logo.colorPalette || logo.colorPalette.length === 0) {
-      return logo.color;
-    }
-    // Find color by name
-    const colorObj = logo.colorPalette.find(color => color.name === name);
-    return colorObj?.value || getColorFromPalette(index, 0);
   };
 
   const activeLogo = logos[activeLogoIndex];
@@ -400,6 +392,7 @@ const LogoDesigns = () => {
           <div className={`logo-showcase-content ${isLogoAnimating ? 'fade-animation' : ''}`}>
             <div className="logo-main-section">
               <div className="logo-preview-main">
+                {/* Main Logo Container with Clickable Image */}
                 <div className="main-logo-container" style={isMobile ? { position: 'relative', paddingBottom: '100px' } : {}}>
                   <div 
                     className="main-logo-clickable"
@@ -515,11 +508,54 @@ const LogoDesigns = () => {
                   )}
                 </div>
 
+                {/* NEW: Software Used Section - Below main logo container */}
+                {/* <div className="software-used-section" style={{ 
+                  marginTop: '20px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  borderRadius: '12px',
+                  padding: '15px 20px',
+                  border: '1px solid rgba(255, 255, 255, 0.05)'
+                }}>
+                  <h4 style={{ 
+                    fontSize: isMobile ? '0.9rem' : '0.95rem', 
+                    fontWeight: '600', 
+                    color: '#fff', 
+                    margin: '0 0 10px 0',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '5px' }}>
+                      <path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h6l2 2h8a2 2 0 012 2v2.66" stroke={getColorFromPalette(activeLogoIndex, 0)} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M18 22v-7M15 19l3-3 3 3" stroke={getColorFromPalette(activeLogoIndex, 0)} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Software Used
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {activeLogo.software && activeLogo.software.map((software, index) => (
+                      <span 
+                        key={index}
+                        style={{
+                          padding: isMobile ? '6px 12px' : '8px 16px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          borderRadius: '8px',
+                          fontSize: isMobile ? '0.8rem' : '0.85rem',
+                          fontWeight: '600',
+                          color: '#aaa',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {software}
+                      </span>
+                    ))}
+                  </div>
+                </div> */}
+
                 <div className="mockups-section">
                   <h3 className="section-title" style={isMobile ? { fontSize: '1.1rem' } : {}}>
-                    {/* <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{ marginRight: '10px' }}>
-                      <path d="M21 16V4c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-2 0H5V4h14v12zm-7-1c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z" fill={getColorFromPalette(activeLogoIndex, 0)}/>
-                    </svg> */}
                     Logo Mockups
                   </h3>
                   <div className="mockups-grid">
@@ -571,8 +607,53 @@ const LogoDesigns = () => {
                   </div>
                 </div>
               </div>
+
+              <div className="software-used-section" style={{ 
+                  // marginTop: '20px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  borderRadius: '12px',
+                  padding: '15px 20px',
+                  border: '1px solid rgba(255, 255, 255, 0.05)'
+                }}>
+                  <h4 style={{ 
+                    fontSize: isMobile ? '0.9rem' : '0.95rem', 
+                    fontWeight: '600', 
+                    color: '#fff', 
+                    margin: '0 0 10px 0',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '5px' }}>
+                      <path d="M20 14.66V20a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2h6l2 2h8a2 2 0 012 2v2.66" stroke={getColorFromPalette(activeLogoIndex, 0)} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M18 22v-7M15 19l3-3 3 3" stroke={getColorFromPalette(activeLogoIndex, 0)} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                    Software Used
+                  </h4>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {activeLogo.software && activeLogo.software.map((software, index) => (
+                      <span 
+                        key={index}
+                        style={{
+                          padding: isMobile ? '6px 12px' : '8px 16px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                          borderRadius: '8px',
+                          fontSize: isMobile ? '0.8rem' : '0.85rem',
+                          fontWeight: '600',
+                          color: '#aaa',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          transition: 'all 0.3s ease'
+                        }}
+                      >
+                        {software}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               
-              {/* Color Palette Section - Only show on desktop */}
+              {/* Color Palette Section - Right column (desktop) */}
               {!isMobile && (
                 <div className="color-palette-section">
                   <h3 className="section-title">
@@ -591,6 +672,7 @@ const LogoDesigns = () => {
                         >
                           <span className="color-hex">{color.value}</span>
                         </div>
+                        {/* <span className="color-name">{color.name}</span> */}
                       </div>
                     ))}
                   </div>

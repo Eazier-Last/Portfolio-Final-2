@@ -233,7 +233,7 @@ const DesignPortfolio = () => {
               
               <div className="mockup-modal-info">
                 <h3 className="mockup-modal-title">{activeDesign.title}</h3>
-                <p className="mockup-modal-subtitle">Main Design</p>
+                {/* <p className="mockup-modal-subtitle">Main Design</p> */}
               </div>
             </div>
           </div>
