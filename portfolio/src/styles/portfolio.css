@@ -344,7 +344,7 @@
 /* NEW: Main preview container with sidebar layout */
 .preview-main-container {
   display: grid;
-  grid-template-columns: 4fr 2.46fr;
+  grid-template-columns: 4fr 2.31fr;
   gap: 30px;
   align-items: start;
 }
