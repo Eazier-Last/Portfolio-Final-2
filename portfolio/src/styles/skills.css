@@ -1,0 +1,207 @@
+/* styles/skills.css - DESKTOP ONLY STYLES */
+.skills-section {
+  padding: 100px 0;
+  position: relative;
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  zoom: 0.8;
+}
+
+.skills-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 100%);
+  margin-top: 20px;
+}
+
+.skills-container {
+  width: 100%;
+  padding: 0 20px;
+}
+
+/* DESKTOP: 3 columns */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  width: 100%;
+}
+
+.skill-card {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--skill-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.skill-card:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-8px);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.skill-card:hover::before {
+  opacity: 1;
+}
+
+.skill-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 25px;
+  flex: 1;
+}
+
+.skill-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.skill-card:hover .skill-icon {
+  transform: scale(1.1);
+}
+
+.skill-info {
+  flex: 1;
+  width: 100%;
+}
+
+.skill-name {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.skill-description {
+  color: #aaa;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin: 0;
+}
+/* MOBILE FIX - Force 2 columns on all mobile devices */
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, minmax(120px, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  
+  .skill-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    padding: 15px !important;
+    height: 150px !important;
+  }
+  
+  .skill-name {
+    font-size: 1rem !important;
+    margin: 0 !important;
+  }
+  
+  .skill-description {
+    display: none !important;
+  }
+}
+/* FORCE 2 COLUMNS ON MOBILE - FOOLPROOF VERSION */
+@media (max-width: 768px) {
+  .skills-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  
+  .skill-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-shrink: 1 !important;
+    padding: 15px !important;
+    height: 150px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .skill-name {
+    font-size: 1rem !important;
+    margin: 0 !important;
+  }
+  
+  .skill-description {
+    display: none !important;
+  }
+}
+
+/* Force 1 column only on VERY small screens */
+@media (max-width: 375px) {
+  .skills-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* REDUCE GAP BETWEEN HERO AND SKILLS ON MOBILE */
+@media (max-width: 768px) {
+  .skills-section {
+    padding-top: 20px !important;
+    padding-bottom: 40px !important;
+    margin-top: -100px !important; /* Pulls the section up closer */
+  }
+  
+  /* Also reduce the section header margin */
+  .skills-section .section-header {
+    margin-bottom: 30px !important;
+  }
+}
+
+/* For very small phones */
+@media (max-width: 480px) {
+  .skills-section {
+    padding-top: 10px !important;
+    padding-bottom: 30px !important;
+    margin-top: -100px !important;
+  }
+  
+  .skills-section .section-header {
+    margin-bottom: 25px !important;
+  }
+}
