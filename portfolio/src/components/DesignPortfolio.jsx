@@ -17,7 +17,7 @@ const DesignPortfolio = () => {
       image: KVillas1,
       thumbnail: KVillas1,
       color: "#4e7539",
-      colorPalette: ["#183e23", "#a98938", "#ffffff", "#000000"], // Added color palette
+      colorPalette: ["#183e23", "#a98938", "#ffffff", "#000000"],
       year: "2023",
       client: "Sunset Sounds Festival",
       deliverables: ["Main Poster", "Social Media Assets", "Merchandise Design"],
@@ -34,7 +34,7 @@ const DesignPortfolio = () => {
       image: Kcafe1,
       thumbnail: Kcafe1,
       color: "#4e7539",
-      colorPalette: ["#f1831f", "#4e7539", "#004732",  "#fdf6e9", "#FFFFFF"], // Added color palette
+      colorPalette: ["#f1831f", "#4e7539", "#004732",  "#fdf6e9", "#FFFFFF"],
       year: "2024",
       client: "Brew & Co.",
       deliverables: ["Logo Design", "Packaging System", "Menu Design"],
@@ -51,7 +51,7 @@ const DesignPortfolio = () => {
       image: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=800",
       thumbnail: "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=400",
       color: "#4ECDC4",
-      colorPalette: ["#4ECDC4", "#292F36", "#FF6B6B", "#F7FFF7", "#000000"], // Added color palette
+      colorPalette: ["#4ECDC4", "#292F36", "#FF6B6B", "#F7FFF7", "#000000"],
       year: "2023",
       client: "TechForward Summit",
       deliverables: ["Conference Banner", "Speaker Cards", "Digital Invites"],
@@ -66,8 +66,11 @@ const DesignPortfolio = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeModal, setActiveModal] = useState(null); // null, 'main', or 'sample'
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const portfolioRef = useRef(null);
   const thumbnailRef = useRef(null);
+  const modalRef = useRef(null);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -127,18 +130,178 @@ const DesignPortfolio = () => {
     handleSelect(prevIndex);
   };
 
+  // Modal functions
+  const openMainImageModal = () => {
+    if (!isMobile) {
+      setActiveImageIndex(0);
+      setActiveModal('main');
+    }
+  };
+
+  const openSampleImageModal = (index) => {
+    if (!isMobile) {
+      setActiveImageIndex(index);
+      setActiveModal('sample');
+    }
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+    setActiveImageIndex(0);
+  };
+
+  const handleOverlayClick = (e) => {
+    if (modalRef.current && !modalRef.current.contains(e.target)) {
+      closeModal();
+    }
+  };
+
+  const handleNextImage = () => {
+    const activeDesign = designs[activeIndex];
+    let images;
+    if (activeModal === 'main') {
+      images = [activeDesign.image];
+    } else {
+      images = activeDesign.sampleImages;
+    }
+    
+    const nextIndex = (activeImageIndex + 1) % images.length;
+    setActiveImageIndex(nextIndex);
+  };
+
+  const handlePrevImage = () => {
+    const activeDesign = designs[activeIndex];
+    let images;
+    if (activeModal === 'main') {
+      images = [activeDesign.image];
+    } else {
+      images = activeDesign.sampleImages;
+    }
+    
+    const prevIndex = (activeImageIndex - 1 + images.length) % images.length;
+    setActiveImageIndex(prevIndex);
+  };
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!activeModal) return;
+      
+      if (e.key === 'Escape') {
+        closeModal();
+      } else if (e.key === 'ArrowRight') {
+        handleNextImage();
+      } else if (e.key === 'ArrowLeft') {
+        handlePrevImage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeModal, activeImageIndex]);
+
   // Function to get color from palette with fallback
   const getColorFromPalette = (index, paletteIndex = 0) => {
     const design = designs[index];
     if (!design.colorPalette || design.colorPalette.length === 0) {
       return design.color;
     }
-    // Use the specified palette index, or the first color if index doesn't exist
     return design.colorPalette[paletteIndex] || design.colorPalette[0] || design.color;
   };
 
+  const activeDesign = designs[activeIndex];
+
   return (
     <section className="portfolio-section" id="portfolio" ref={portfolioRef}>
+      {/* Main Image Modal */}
+      {activeModal === 'main' && !isMobile && (
+        <div className="mockup-modal-overlay" onClick={handleOverlayClick}>
+          <div className="mockup-modal-container" ref={modalRef}>
+            <button className="mockup-modal-close" onClick={closeModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            
+            <div className="mockup-modal-content">
+              <img 
+                src={activeDesign.image} 
+                alt={activeDesign.title}
+                className="mockup-modal-image"
+              />
+              
+              <div className="mockup-modal-info">
+                <h3 className="mockup-modal-title">{activeDesign.title}</h3>
+                <p className="mockup-modal-subtitle">Main Design</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sample Image Modal */}
+      {activeModal === 'sample' && !isMobile && activeDesign.sampleImages[activeImageIndex] && (
+        <div className="mockup-modal-overlay" onClick={handleOverlayClick}>
+          <div className="mockup-modal-container" ref={modalRef}>
+            <button className="mockup-modal-close" onClick={closeModal}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            
+            <div className="mockup-modal-content">
+              <img 
+                src={activeDesign.sampleImages[activeImageIndex]} 
+                alt={`Sample ${activeImageIndex + 1}`}
+                className="mockup-modal-image"
+              />
+              
+              <div className="mockup-modal-info">
+                <h3 className="mockup-modal-title">{activeDesign.title}</h3>
+                <p className="mockup-modal-subtitle">Sample {activeImageIndex + 1} of {activeDesign.sampleImages.length}</p>
+              </div>
+              
+              {activeDesign.sampleImages.length > 1 && (
+                <div className="mockup-modal-navigation">
+                  <button 
+                    className="mockup-modal-nav prev"
+                    onClick={handlePrevImage}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                  
+                  <div className="mockup-modal-dots">
+                    {activeDesign.sampleImages.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`mockup-modal-dot ${index === activeImageIndex ? 'active' : ''}`}
+                        onClick={() => setActiveImageIndex(index)}
+                        style={{
+                          backgroundColor: index === activeImageIndex ? getColorFromPalette(activeIndex, 0) : 'rgba(255, 255, 255, 0.3)'
+                        }}
+                      />
+                    ))}
+                  </div>
+                  
+                  <button 
+                    className="mockup-modal-nav next"
+                    onClick={handleNextImage}
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="section-header">
         <h2 className="section-title" style={isMobile ? { fontSize: '2.5rem' } : {}}>
           Posters
@@ -220,41 +383,7 @@ const DesignPortfolio = () => {
                     margin: '0'
                   } : {}}
                 >
-                  {/* <h3 
-                    className="section-title"
-                    style={isMobile ? { fontSize: '1.1rem' } : {}}
-                  >
-                    Project Deliverables
-                  </h3> */}
-                  {/* <div 
-                    className="deliverables-grid"
-                    style={isMobile ? {
-                      display: 'grid',
-                      gridTemplateColumns: '1fr',
-                      gap: '8px'
-                    } : {}}
-                  >
-                    {designs[activeIndex].deliverables.map((item, index) => (
-                      <div 
-                        key={index} 
-                        className="deliverable-item"
-                        style={{ 
-                          borderLeftColor: getColorFromPalette(activeIndex, 0),
-                          backgroundColor: `${getColorFromPalette(activeIndex, 0)}10`,
-                          ...(isMobile ? {
-                            padding: '10px 12px',
-                            fontSize: '0.8rem',
-                            marginBottom: '5px'
-                          } : {})
-                        }}
-                      >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '10px', color: getColorFromPalette(activeIndex, 0) }}>
-                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor"/>
-                        </svg>
-                        {item}
-                      </div>
-                    ))}
-                  </div> */}
+                  {/* Deliverables section removed */}
                 </div>
                 
                 <div 
@@ -371,10 +500,14 @@ const DesignPortfolio = () => {
               <div className="preview-main-container">
                 <div className="main-preview-section">
                   <div className="preview-container">
-                    <div className="preview-frame">
+                    <div 
+                      className="preview-frame"
+                      onClick={openMainImageModal}
+                      style={{ cursor: isMobile ? 'default' : 'pointer' }}
+                    >
                       <img 
-                        src={designs[activeIndex].image} 
-                        alt={designs[activeIndex].title}
+                        src={activeDesign.image} 
+                        alt={activeDesign.title}
                         className="preview-image"
                       />
                       <div className="preview-overlay" style={{ background: `linear-gradient(45deg, ${getColorFromPalette(activeIndex, 0)}15, transparent)` }} />
@@ -385,8 +518,7 @@ const DesignPortfolio = () => {
                         <div className="color-palette">
                           <h4 style={isMobile ? { fontSize: '0.9rem' } : {}}>Color Palette</h4>
                           <div className="colors">
-                            {/* Dynamic color palette rendering */}
-                            {designs[activeIndex].colorPalette && designs[activeIndex].colorPalette.map((color, index) => (
+                            {activeDesign.colorPalette && activeDesign.colorPalette.map((color, index) => (
                               <div 
                                 key={index} 
                                 className="color-sample" 
@@ -394,12 +526,11 @@ const DesignPortfolio = () => {
                                 title={color}
                               />
                             ))}
-                            {/* Fallback if no colorPalette is defined */}
-                            {(!designs[activeIndex].colorPalette || designs[activeIndex].colorPalette.length === 0) && (
+                            {(!activeDesign.colorPalette || activeDesign.colorPalette.length === 0) && (
                               <>
-                                <div className="color-sample" style={{ backgroundColor: designs[activeIndex].color }} />
-                                <div className="color-sample" style={{ backgroundColor: `${designs[activeIndex].color}80` }} />
-                                <div className="color-sample" style={{ backgroundColor: `${designs[activeIndex].color}40` }} />
+                                <div className="color-sample" style={{ backgroundColor: activeDesign.color }} />
+                                <div className="color-sample" style={{ backgroundColor: `${activeDesign.color}80` }} />
+                                <div className="color-sample" style={{ backgroundColor: `${activeDesign.color}40` }} />
                                 <div className="color-sample" style={{ backgroundColor: '#FFFFFF' }} />
                                 <div className="color-sample" style={{ backgroundColor: '#000000' }} />
                               </>
@@ -410,24 +541,12 @@ const DesignPortfolio = () => {
                         <div className="software-used">
                           <h4 style={isMobile ? { fontSize: '0.9rem' } : {}}>Software Used</h4>
                           <div className="software-icons">
-                            {/* <span 
-                              className="software-icon" 
-                              style={isMobile ? { fontSize: '0.8rem', padding: '6px 12px' } : {}}
-                            >
-                              Illustrator
-                            </span> */}
                             <span 
                               className="software-icon" 
                               style={isMobile ? { fontSize: '0.8rem', padding: '6px 12px' } : {}}
                             >
                               Photoshop
                             </span>
-                            {/* <span 
-                              className="software-icon" 
-                              style={isMobile ? { fontSize: '0.8rem', padding: '6px 12px' } : {}}
-                            >
-                              InDesign
-                            </span> */}
                           </div>
                         </div>
                       </div>
@@ -437,8 +556,13 @@ const DesignPortfolio = () => {
                 
                 <div className="sample-images-sidebar">
                   <div className="sample-images-vertical">
-                    {designs[activeIndex].sampleImages.map((sample, index) => (
-                      <div key={index} className="sample-image-item">
+                    {activeDesign.sampleImages.map((sample, index) => (
+                      <div 
+                        key={index} 
+                        className="sample-image-item"
+                        onClick={() => openSampleImageModal(index)}
+                        style={{ cursor: isMobile ? 'default' : 'pointer' }}
+                      >
                         <img 
                           src={sample} 
                           alt={`Sample ${index + 1}`}

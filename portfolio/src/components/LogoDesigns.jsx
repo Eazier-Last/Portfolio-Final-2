@@ -11,7 +11,7 @@ const LogoDesigns = () => {
     {
       id: 1,
       title: "Paw Prints",
-      category: "Printing Shop Logo",
+      category: "Printing Shop",
       description: "Modern tech company logo combining geometric precision with organic curves. Represents innovation, stability, and forward-thinking approach in the tech industry.",
       image: Pawprint2,
       thumbnail: Pawprint1,
@@ -546,7 +546,7 @@ const LogoDesigns = () => {
                     <span className="logo-category" style={{ color: getColorFromPalette(activeLogoIndex, 0) }}>
                       {activeLogo.category}
                     </span>
-                    <span className="logo-year">{activeLogo.year}</span>
+                    {/* <span className="logo-year">{activeLogo.year}</span> */}
                   </div>
                   <h2 className="logo-title" style={isMobile ? { fontSize: '2rem' } : {}}>{activeLogo.title}</h2>
                   <p className="logo-description" style={isMobile ? { fontSize: '0.95rem' } : {}}>{activeLogo.description}</p>
